@@ -1,0 +1,152 @@
+EXERCISE A: BEGINNER GUIDE — CREATE A GITHUB REPOSITORY AND MAKE YOUR FIRST COMMIT
+
+Purpose
+This guide explains how a beginner can create a GitHub repository and make a first commit using the GitHub website.
+
+Before you begin
+- Have access to the internet.
+- Have a GitHub account. If you do not have one, create an account at https://github.com.
+- Sign in to GitHub.
+
+Procedure
+
+1. Open GitHub.
+   Expected result: The GitHub home page appears and you are signed in.
+
+2. Select the + icon in the top-right corner.
+   Expected result: A menu of repository-related options appears.
+
+3. Choose “New repository”.
+   Expected result: The page for creating a new repository opens.
+
+4. Enter a repository name, such as “my-first-project”.
+   Expected result: The repository name appears in the name field.
+
+5. Add a short description, such as “My first practice project”.
+   Expected result: The description appears in the description field.
+
+6. Choose whether the repository should be Public or Private.
+   Expected result: Your preferred visibility option is selected.
+
+7. Select “Add a README file”.
+   Expected result: The README option is checked, so GitHub will create an introductory file.
+
+8. Select “Create repository”.
+   Expected result: GitHub opens the new repository page and displays the README file.
+
+9. Open the README file and select the pencil (Edit) icon.
+   Expected result: The README editor opens and the text can be changed.
+
+10. Add a short introductory sentence, then select “Commit changes”.
+    Expected result: GitHub displays a commit form; after confirming the commit, the updated README appears in the repository.
+
+Screenshot to include
+Capture a screenshot of the repository page after the first commit. The screenshot should show the repository name, the README file, and the latest commit message. Insert the screenshot in this section of your submitted document if your instructor requires visual evidence.
+
+Troubleshooting
+- If GitHub says the repository name is unavailable, choose a different name.
+- If you cannot create a repository, confirm that you are signed in to the correct GitHub account.
+- If your changes do not appear, refresh the repository page and check the commit history.
+
+Conclusion
+A GitHub repository stores project files and tracks changes. Making a first commit saves a version of your work so that you can continue updating it.
+
+
+EXERCISE B: API ENDPOINT DOCUMENTATION
+
+Endpoint
+Create a task for a project.
+
+HTTP method
+POST
+
+URL
+/api/v1/projects/{project_id}/tasks
+
+Description
+Creates a new task under the specified project. The caller must be authenticated and must have permission to add tasks to that project.
+
+Path parameters
+
+| Name | Type | Required | Description |
+|---|---|---|---|
+| project_id | integer | Yes | Unique identifier of the project that will contain the task. |
+
+Query parameters
+None.
+
+Request headers
+
+| Header | Required | Description |
+|---|---|---|
+| Authorization | Yes | Bearer access token used to authenticate the request. |
+| Content-Type | Yes | Must be application/json. |
+| Accept | Recommended | Indicates that the client expects a JSON response. |
+
+Request body
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| title | string | Yes | Short name of the task. Must not be empty. |
+| description | string | No | Additional details about the task. |
+| assignee_id | integer | No | Identifier of the user assigned to the task. |
+| due_date | string (date) | No | Due date in YYYY-MM-DD format. |
+| priority | string | No | Task priority, for example low, medium, or high. |
+
+Example request
+
+POST /api/v1/projects/42/tasks
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "Prepare project presentation",
+  "description": "Create slides for the project review meeting.",
+  "assignee_id": 17,
+  "due_date": "2026-12-10",
+  "priority": "high"
+}
+
+Successful response
+
+HTTP/1.1 201 Created
+Content-Type: application/json
+
+{
+  "id": 105,
+  "project_id": 42,
+  "title": "Prepare project presentation",
+  "description": "Create slides for the project review meeting.",
+  "assignee_id": 17,
+  "due_date": "2026-12-10",
+  "priority": "high",
+  "status": "open",
+  "created_at": "2026-11-25T10:30:00Z"
+}
+
+Possible response status codes
+
+| Status code | Meaning | When it may occur |
+|---|---|---|
+| 201 Created | Task created successfully. | The request is valid and the task is saved. |
+| 400 Bad Request | Invalid request format. | The JSON body is malformed or a parameter has an invalid format. |
+| 401 Unauthorized | Authentication is missing or invalid. | The bearer token is absent, expired, or invalid. |
+| 403 Forbidden | Access is denied. | The authenticated user does not have permission to add tasks to the project. |
+| 404 Not Found | Resource not found. | The project_id does not identify an existing project. |
+| 409 Conflict | Request conflicts with current data. | The request conflicts with a project rule or duplicate constraint. |
+| 415 Unsupported Media Type | Unsupported content type. | Content-Type is not application/json. |
+| 422 Unprocessable Entity | Validation failed. | A field such as title or priority does not meet the API's validation rules. |
+| 429 Too Many Requests | Rate limit exceeded. | The client has sent too many requests in a short period. |
+| 500 Internal Server Error | Unexpected server error. | The server encounters an unhandled problem. |
+| 503 Service Unavailable | Service temporarily unavailable. | The API is temporarily unable to process requests. |
+
+Validation rules
+- project_id must refer to an existing project.
+- title is required and must contain non-whitespace text.
+- If supplied, assignee_id must refer to a valid user who can access the project.
+- If supplied, due_date must use YYYY-MM-DD format and be a valid date.
+- If supplied, priority must be one of low, medium, or high.
+
+Conclusion
+This endpoint allows an authorized client to create a task within a project. A successful request returns HTTP 201 and a JSON representation of the newly created task.
